@@ -10,9 +10,8 @@ import (
 )
 
 type Point struct {
-	X     int
-	Y     int
-	Steps int
+	X int
+	Y int
 }
 
 func main() {
@@ -28,29 +27,34 @@ func main() {
 	points1 := calculatePoints(wire1)
 	points2 := calculatePoints(wire2)
 
-	// Brute force intersection
-	intersection := make([]Point, 0)
-	for _, point1 := range points1 {
-		for _, point2 := range points2 {
-			if point1.X == point2.X && point1.Y == point2.Y {
-				point := Point{point1.X, point1.Y, point1.Steps + point2.Steps}
-				intersection = append(intersection, point)
-			}
+	intersection := make(map[Point]int)
+	for point1, steps1 := range points1 {
+		if steps2, ok := points2[point1]; ok {
+			intersection[point1] = steps1 + steps2
 		}
 	}
 
-	shortestDistance := manhattanDistance(intersection[0])
-	for _, point := range intersection[1:] {
+	var shortestDistance float64
+	// Initialize shortest distance with any point from map
+	for point := range intersection {
+		shortestDistance = manhattanDistance(point)
+		break
+	}
+	for point := range intersection {
 		distance := manhattanDistance(point)
 		if distance < shortestDistance {
 			shortestDistance = distance
 		}
 	}
 
-	fewestSteps := intersection[0].Steps
-	for _, point := range intersection[1:] {
-		if point.Steps < fewestSteps {
-			fewestSteps = point.Steps
+	var fewestSteps int
+	// Initialize fewestSteps with any step count from map
+	for _, steps := range intersection {
+		fewestSteps = steps
+	}
+	for _, steps := range intersection {
+		if steps < fewestSteps {
+			fewestSteps = steps
 		}
 	}
 
@@ -58,8 +62,8 @@ func main() {
 	fmt.Printf("Fewest Steps: %d\n", fewestSteps)
 }
 
-func calculatePoints(wire []string) []Point {
-	points := make([]Point, 0)
+func calculatePoints(wire []string) map[Point]int {
+	points := make(map[Point]int)
 
 	x := 0
 	y := 0
@@ -80,8 +84,11 @@ func calculatePoints(wire []string) []Point {
 			}
 
 			steps++
-			point := Point{x, y, steps}
-			points = append(points, point)
+			point := Point{x, y}
+
+			if _, ok := points[point]; !ok {
+				points[point] = steps
+			}
 		}
 	}
 
