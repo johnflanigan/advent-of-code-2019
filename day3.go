@@ -14,7 +14,7 @@ type Point struct {
 	Y int
 }
 
-func main() {
+func day3() {
 	content, err := ioutil.ReadFile("input/day3.txt")
 	if err != nil {
 		log.Fatal(err)

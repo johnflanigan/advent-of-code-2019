@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func main() {
+func day4() {
 	content, err := ioutil.ReadFile("input/day4.txt")
 	if err != nil {
 		log.Fatal(err)
