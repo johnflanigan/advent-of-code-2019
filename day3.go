@@ -9,9 +9,9 @@ import (
 	"strings"
 )
 
-type Point struct {
-	X int
-	Y int
+type point struct {
+	x int
+	y int
 }
 
 func day3() {
@@ -27,7 +27,7 @@ func day3() {
 	points1 := calculatePoints(wire1)
 	points2 := calculatePoints(wire2)
 
-	intersection := make(map[Point]int)
+	intersection := make(map[point]int)
 	for point1, steps1 := range points1 {
 		if steps2, ok := points2[point1]; ok {
 			intersection[point1] = steps1 + steps2
@@ -62,8 +62,8 @@ func day3() {
 	fmt.Printf("Fewest Steps: %d\n", fewestSteps)
 }
 
-func calculatePoints(wire []string) map[Point]int {
-	points := make(map[Point]int)
+func calculatePoints(wire []string) map[point]int {
+	points := make(map[point]int)
 
 	x := 0
 	y := 0
@@ -84,7 +84,7 @@ func calculatePoints(wire []string) map[Point]int {
 			}
 
 			steps++
-			point := Point{x, y}
+			point := point{x, y}
 
 			if _, ok := points[point]; !ok {
 				points[point] = steps
@@ -95,6 +95,6 @@ func calculatePoints(wire []string) map[Point]int {
 	return points
 }
 
-func manhattanDistance(point Point) float64 {
-	return math.Abs(float64(point.X)) + math.Abs(float64(point.Y))
+func manhattanDistance(point point) float64 {
+	return math.Abs(float64(point.x)) + math.Abs(float64(point.y))
 }

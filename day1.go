@@ -24,7 +24,7 @@ func day1() {
 		totalFuel += calculateFuelRequired(mass)
 	}
 
-	fmt.Printf("Fuel required: %d", totalFuel)
+	fmt.Printf("Fuel required: %d\n", totalFuel)
 }
 
 func calculateFuelRequired(mass int) int {
@@ -32,7 +32,6 @@ func calculateFuelRequired(mass int) int {
 
 	if fuel <= 0 {
 		return 0
-	} else {
-		return fuel + calculateFuelRequired(fuel)
 	}
+	return fuel + calculateFuelRequired(fuel)
 }
