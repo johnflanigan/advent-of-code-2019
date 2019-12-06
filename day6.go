@@ -19,7 +19,7 @@ func day6() {
 		log.Fatal(err)
 	}
 
-	inputs := strings.Split(string(content), "\n")
+	inputs := strings.Split(strings.TrimSpace(string(content)), "\n")
 	objects := make(map[string]*object)
 
 	for _, input := range inputs {
