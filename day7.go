@@ -59,7 +59,7 @@ func day7() {
 			memoryCopy := make([]int, len(memory))
 			copy(memoryCopy, memory)
 
-			output = runAmplificationCircuit(memoryCopy, element, output)
+			output, _ = runAmplificationCircuit(memoryCopy, element, output)
 		}
 
 		if output > maxResult {
@@ -68,9 +68,73 @@ func day7() {
 	}
 
 	fmt.Printf("Max result: %d\n", maxResult)
+
+	// Create settings
+	settings = make([][]int, 0)
+	for a := 5; a <= 9; a++ {
+		for b := 5; b <= 9; b++ {
+			for c := 5; c <= 9; c++ {
+				for d := 5; d <= 9; d++ {
+					for e := 5; e <= 9; e++ {
+						if a != b && a != c && a != d && a != e &&
+							b != c && b != d && b != e &&
+							c != d && c != e &&
+							d != e {
+							setting := []int{a, b, c, d, e}
+							settings = append(settings, setting)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	maxResult = 0
+	halt := false
+	for _, setting := range settings {
+		outputs := []int{0}
+		output := 0
+		index := 0
+		for !halt {
+			memoryCopy := make([]int, len(memory))
+			copy(memoryCopy, memory)
+
+			output, halt = runAmplificationCircuit(memoryCopy, setting[index % 5], outputs[len(outputs) - 1])
+			outputs = append(outputs, output)
+			index++
+
+
+
+
+
+			//intermediateOutput := 0
+			//
+			//for _, element := range setting {
+			//	memoryCopy := make([]int, len(memory))
+			//	copy(memoryCopy, memory)
+			//
+			//	intermediateOutput, halt = runAmplificationCircuit(memoryCopy, element, intermediateOutput)
+			//	//if halt && element != 9 {
+			//	//	break
+			//	//} else if halt && element == 9 {
+			//	//
+			//	//}
+			//}
+			//
+			//thrusterOutput = intermediateOutput
+		}
+
+		finalOutput := outputs[index - (index % 5) - 1]
+
+		if finalOutput > maxResult {
+			maxResult = output
+		}
+
+		fmt.Printf("Max result: %d\n", maxResult)
+	}
 }
 
-func runAmplificationCircuit(memory []int, setting int, prevOutput int) int {
+func runAmplificationCircuit(memory []int, setting int, prevOutput int) (int, bool) {
 	const additionCode = 1
 	const multiplicationCode = 2
 	const inputCode = 3
@@ -100,7 +164,7 @@ func runAmplificationCircuit(memory []int, setting int, prevOutput int) int {
 			}
 
 		} else if opcode == outputCode {
-			return amplificationOutput(memory, instructionPointer)
+			return amplificationOutput(memory, instructionPointer), false
 		} else if opcode == jumpIfTrueCode {
 			instructionPointer = jumpIfTrue(memory, instructionPointer)
 		} else if opcode == jumpIfFalseCode {
@@ -116,7 +180,7 @@ func runAmplificationCircuit(memory []int, setting int, prevOutput int) int {
 		opcode = getOpcode(memory, instructionPointer)
 	}
 
-	return memory[0]
+	return memory[0], true
 }
 
 func amplificationInput(memory []int, setting int, instructionPointer int) int {
